@@ -1,4 +1,5 @@
 from psycopg2.pool import ThreadedConnectionPool
+from functools import lru_cache
 
 
 class Database:
@@ -12,11 +13,10 @@ class Database:
 
     def __create_connection(self):
         try:
-            print("create con")
             pool_connection = ThreadedConnectionPool(
                 minconn=1,
                 maxconn=10,
-                dsn=f'postgresql://{self.__user}:{self.__password}@{self.__host}:{self.__port}/{self.__database}?application_name=flasksimpleapi')
+                dsn=f'postgresql://{self.__user}:{self.__password}@{self.__host}:{self.__port}/{self.__database}?application_name=python-postgresql-conn')
             return pool_connection
         except Exception as e:
             raise ValueError(e)
@@ -29,5 +29,6 @@ class Database:
 
 database_obj = Database()
 
+@lru_cache
 def get_connection() -> Database:
     return database_obj
