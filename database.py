@@ -12,6 +12,7 @@ class Database:
 
     def __create_connection(self):
         try:
+            print("create con")
             pool_connection = ThreadedConnectionPool(
                 minconn=1,
                 maxconn=10,
@@ -20,8 +21,13 @@ class Database:
         except Exception as e:
             raise ValueError(e)
 
-    def get_connection(self):
+    def get_pool_conn(self):
         return self.__pool.getconn()
 
-    def put_connection(self, conn):
+    def put_pool_conn(self, conn):
         return self.__pool.putconn(conn)
+
+database_obj = Database()
+
+def get_connection() -> Database:
+    return database_obj
